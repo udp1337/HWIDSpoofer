@@ -4,6 +4,8 @@
 #include "Logger.hpp"
 #include "Utils.h"
 #include <wchar.h>
+
+
 namespace Gpu
 {
 	extern "C" POBJECT_TYPE * IoDriverObjectType;
@@ -98,25 +100,25 @@ namespace Gpu
 	}
 	bool GpuManager::Execute()
 	{
-		UUID newUUID = {0};
-		// Max number of GPUs supported is 32.
-		for (int i = 0; i < 32; i++) {
-			uintptr_t ProbedGPU = m_gpuMgrGetGpuFromId(i);
+		//UUID newUUID = {0};
+		//// Max number of GPUs supported is 32.
+		//for (int i = 0; i < 32; i++) {
+		//	uintptr_t ProbedGPU = m_gpuMgrGetGpuFromId(i);
 
-			// Does not exist?
-			if (!ProbedGPU) continue;
+		//	// Does not exist?
+		//	if (!ProbedGPU) continue;
 
-			// Is GPU UUID not initialized?
-			if (!*(bool*)(ProbedGPU + m_UuidValidOffset)) continue;
+		//	// Is GPU UUID not initialized?
+		//	if (!*(bool*)(ProbedGPU + m_UuidValidOffset)) continue;
 
-			// Update each byte of the existing UUID with the new UUID
-			const PBYTE newUUIDBytes = reinterpret_cast<const PBYTE>(&newUUID);
-			for (int j = 0; j < sizeof(GUID); j++)
-				*(PBYTE)(ProbedGPU + m_UuidValidOffset + 1 + j) = newUUIDBytes[j];
+		//	// Update each byte of the existing UUID with the new UUID
+		//	const PBYTE newUUIDBytes = reinterpret_cast<const PBYTE>(&newUUID);
+		//	for (int j = 0; j < sizeof(GUID); j++)
+		//		*(PBYTE)(ProbedGPU + m_UuidValidOffset + 1 + j) = newUUIDBytes[j];
 
-			log("Spoofed GPU %d.\n", i);
-		}
-		return true;
+		//	log("Spoofed GPU %d.\n", i);
+		//}
+		//return true;
 
 		//return HookDeviceControl();
 	}
