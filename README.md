@@ -1,8 +1,8 @@
 
 ## 1. Introduction
-This project is a high-privilege Windows kernel driver that modifies the computer's hardware IDs.
+This project is a high-privilege Windows kernel driver that modifies the computer's hardware IDs.  I tested it on Apex Legend protected by EAC for about 2 hours and there were no ban issues(December 22, 2024).
 
-**Note: The author's Windows version is 22H2**
+**Note: The author's Windows version is 22H2， Nvidia Driver Version:  560.94 **
 
 [简体中文](README_zh.md) | English
 
@@ -13,6 +13,8 @@ This project is a high-privilege Windows kernel driver that modifies the compute
 - **GPU**: Randomize the serial number of the graphics card
 
 Tips:
+
+After the execution is completed, if some hardware IDs have not changed, it is because the kernel has not synchronized data to the user layer. You need to restart the relevant services. You can execute the following command with administrator privileges
 
 ``````cmd
 net stop winmgmt
@@ -143,3 +145,5 @@ The author assumes no liability for any direct or indirect damages arising from 
 - [hwid](https://github.com/btbd/hwid)
 - [EASY-HWID-SPOOFER](https://github.com/FiYHer/EASY-HWID-SPOOFER)
 - [Smbios](https://www.dmtf.org/standards/smbios)
+- [open-gpu-kernel-modules](https://github.com/NVIDIA/open-gpu-kernel-modules)
+- [gpu-hookless](https://www.unknowncheats.me/forum/anti-cheat-bypass/575441-spoofing-nvidias-uuid-kernel-hookless.html)
