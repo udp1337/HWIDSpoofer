@@ -1,0 +1,51 @@
+;
+; ARPMonitor.inf
+; ARP Spoofing Detection Driver - Educational Use Only
+;
+
+[Version]
+Signature="$WINDOWS NT$"
+Class=NetService
+ClassGuid={4D36E974-E325-11CE-BFC1-08002BE10318}
+Provider=%ManufacturerName%
+CatalogFile=ARPMonitor.cat
+DriverVer=01/24/2025,1.0.0.0
+PnpLockdown=1
+
+[DestinationDirs]
+DefaultDestDir = 12
+
+[SourceDisksNames]
+1 = %DiskName%,,,""
+
+[SourceDisksFiles]
+ARPMonitor.sys  = 1,,
+
+[Manufacturer]
+%ManufacturerName%=Standard,NTamd64
+
+[Standard.NTamd64]
+%ARPMonitor.DeviceDesc%=ARPMonitor_Device, Root\ARPMonitor
+
+[ARPMonitor_Device.NT]
+CopyFiles=Drivers_Dir
+
+[Drivers_Dir]
+ARPMonitor.sys
+
+[ARPMonitor_Device.NT.Services]
+AddService = ARPMonitor,%SPSVCINST_ASSOCSERVICE%, ARPMonitor_Service_Inst
+
+[ARPMonitor_Service_Inst]
+DisplayName    = %ARPMonitor.SVCDESC%
+ServiceType    = 1               ; SERVICE_KERNEL_DRIVER
+StartType      = 3               ; SERVICE_DEMAND_START
+ErrorControl   = 1               ; SERVICE_ERROR_NORMAL
+ServiceBinary  = %12%\ARPMonitor.sys
+
+[Strings]
+SPSVCINST_ASSOCSERVICE= 0x00000002
+ManufacturerName="Educational Security Research"
+DiskName = "ARP Monitor Installation Disk"
+ARPMonitor.DeviceDesc = "ARP Spoofing Detection Driver"
+ARPMonitor.SVCDESC = "ARP Monitor Service - Network Security"
