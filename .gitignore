@@ -20,7 +20,7 @@ bld/
 # Visual Studio 代码覆盖结果
 *.coveragexml
 
-# NCrunch
+# NCrunc
 _NCrunch_*
 .*crunch*.local.xml
 nCrunchTemp_*
