@@ -1,5 +1,135 @@
+# 📚 Educational Security Research Project
 
-## 1. Introduction
+> **UPDATED PROJECT STRUCTURE**: This repository now contains an extended educational framework for studying Windows kernel security, HVCI compatibility, and defensive security monitoring.
+
+---
+
+## 🎓 Project Overview
+
+This repository demonstrates the **evolution of Windows security** from legacy kernel techniques (2015-2018) to modern HVCI-compatible approaches (2023+). It is designed for **educational cybersecurity coursework** and **authorized security research**.
+
+### Components
+
+| Component | Type | Purpose | Status |
+|-----------|------|---------|--------|
+| **ControlPanel** | User-mode Console App | Unified educational interface | ✅ Complete |
+| **Legacy Spoofer** | Kernel Driver (original) | Educational analysis of outdated techniques | 📚 Read-only |
+| **HVCI Driver** | Modern Kernel Driver | HVCI-compatible monitoring | ✅ Functional |
+| **ARP Monitor** | Network Security Driver | ARP spoofing detection (defensive) | ✅ Functional |
+
+### 🚀 Quick Start
+
+#### Option 1: Console Application Only (No WDK Required)
+
+Build and run the educational Control Panel without compiling drivers:
+
+```cmd
+# Windows only
+build_controlpanel.cmd
+```
+
+Or manually:
+```cmd
+msbuild ControlPanel\ControlPanel.vcxproj /p:Configuration=Release /p:Platform=x64
+cd bin\x64\Release
+ControlPanel.exe
+```
+
+#### Option 2: Full Build (Requires WDK)
+
+For complete driver development experience:
+
+**See [BUILD.md](BUILD.md) for detailed instructions**
+
+Prerequisites:
+- Visual Studio 2019/2022
+- Windows Driver Kit (WDK)
+- Administrator privileges for driver testing
+
+```cmd
+msbuild HWIDSpoofer.sln /p:Configuration=Release /p:Platform=x64
+```
+
+### 📖 Documentation
+
+- **[BUILD.md](BUILD.md)** - Complete build instructions, troubleshooting, WDK setup
+- **[ControlPanel/README.md](ControlPanel/README.md)** - Console application usage guide
+- **[ModernDriver/README_HVCI.md](ModernDriver/README_HVCI.md)** - HVCI-compatible driver documentation
+- **[ModernDriver/COMPARISON.md](ModernDriver/COMPARISON.md)** - Technical comparison: Legacy vs. Modern
+- **[ARPMonitor/README_ARP.md](ARPMonitor/README_ARP.md)** - ARP spoofing detection guide
+
+### 🎯 Educational Value
+
+This project teaches:
+
+1. **Windows Security Evolution**
+   - Why legacy kernel techniques fail on modern Windows
+   - How HVCI (Hypervisor-protected Code Integrity) works
+   - Hardware-assisted security (VT-x, EPT, TPM)
+
+2. **Defensive Security**
+   - ARP spoofing detection
+   - Network security monitoring
+   - Proper use of Windows APIs
+
+3. **Driver Development Best Practices**
+   - HVCI compatibility requirements
+   - Memory pool types (NonPagedPoolNx)
+   - SAL annotations
+   - Official API usage
+
+### ⚠️ Important Disclaimers
+
+**Educational Use Only**: This software is for authorized security research, academic coursework, and understanding Windows security mechanisms.
+
+**What This Is NOT**:
+- ❌ Not a tool for bypassing anti-cheat systems
+- ❌ Not for unauthorized system modification
+- ❌ Not for circumventing HVCI/Secure Boot/TPM
+
+**What This IS**:
+- ✅ Educational demonstration of security evolution
+- ✅ HVCI-compatible monitoring tools
+- ✅ Defensive security (ARP detection)
+- ✅ Read-only hardware ID information gathering
+
+### 🔍 Technical Highlights
+
+**Legacy Approach (Incompatible with HVCI)**:
+```cpp
+// ❌ BLOCKED by HVCI
+driver->MajorFunction[IRP_MJ_DEVICE_CONTROL] = hookedHandler; // W^X violation
+*(PULONG64)(raidExtension + 0x120) = newSerial;              // EPT blocks write
+```
+
+**Modern Approach (HVCI-Compatible)**:
+```cpp
+// ✅ Works with HVCI
+DeviceIoControl(hDisk, IOCTL_STORAGE_QUERY_PROPERTY, ...);   // Official API
+ZwOpenKey(&key, KEY_READ, &registryPath);                    // Registry-based
+buffer = ExAllocatePoolWithTag(NonPagedPoolNx, size, tag);  // NX memory
+```
+
+### 📊 Comparison Summary
+
+| Feature | Legacy Method | Modern Method | HVCI Compatible? |
+|---------|---------------|---------------|------------------|
+| Disk Serial | Direct RAID structure modification | Storage Query API | ❌ → ✅ |
+| MAC Address | IRP hooking | IoGetDeviceInterfaces + Registry | ❌ → ✅ |
+| SMBIOS | Physical memory access | Registry reading | ❌ → ✅ |
+| Memory Allocation | NonPagedPool | NonPagedPoolNx | ❌ → ✅ |
+
+---
+
+## 🔗 Original Project Documentation
+
+The sections below contain the original documentation for the **Legacy Spoofer** component. This driver demonstrates techniques from 2015-2018 that **no longer work on HVCI-enabled systems** (Windows 10 1607+, Windows 11).
+
+**Note**: The original driver is provided for **educational analysis only**. For functional monitoring on modern Windows, use the **HVCI Driver** component instead.
+
+---
+
+## 1. Introduction (Original Legacy Project)
 This project is a high-privilege Windows kernel driver that modifies the computer's hardware IDs.  I tested it on Apex Legend protected by EAC for about 2 hours and there were no ban issues(December 22, 2024).
 
 **Note: The author's Windows version is 22H2， Nvidia Driver Version:  560.94 **
