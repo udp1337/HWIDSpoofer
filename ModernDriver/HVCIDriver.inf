@@ -1,0 +1,58 @@
+;
+; HVCIDriver.inf
+; HVCI-Compatible Kernel Driver for Educational Purposes
+;
+
+[Version]
+Signature="$WINDOWS NT$"
+Class=System
+ClassGuid={4d36e97d-e325-11ce-bfc1-08002be10318}
+Provider=%ManufacturerName%
+CatalogFile=HVCIDriver.cat
+DriverVer=01/01/2025,1.0.0.0
+PnpLockdown=1
+
+[DestinationDirs]
+DefaultDestDir = 12
+HVCIDriver_Device_CoInstaller_CopyFiles = 11
+
+[SourceDisksNames]
+1 = %DiskName%,,,""
+
+[SourceDisksFiles]
+HVCIDriver.sys  = 1,,
+
+[Manufacturer]
+%ManufacturerName%=Standard,NTamd64
+
+[Standard.NTamd64]
+%HVCIDriver.DeviceDesc%=HVCIDriver_Device, Root\HVCIDriver
+
+[HVCIDriver_Device.NT]
+CopyFiles=Drivers_Dir
+
+[Drivers_Dir]
+HVCIDriver.sys
+
+[HVCIDriver_Device.NT.Services]
+AddService = HVCIDriver,%SPSVCINST_ASSOCSERVICE%, HVCIDriver_Service_Inst
+
+[HVCIDriver_Service_Inst]
+DisplayName    = %HVCIDriver.SVCDESC%
+ServiceType    = 1               ; SERVICE_KERNEL_DRIVER
+StartType      = 3               ; SERVICE_DEMAND_START
+ErrorControl   = 1               ; SERVICE_ERROR_NORMAL
+ServiceBinary  = %12%\HVCIDriver.sys
+
+[HVCIDriver_Device.NT.Wdf]
+KmdfService =  HVCIDriver, HVCIDriver_wdfsect
+
+[HVCIDriver_wdfsect]
+KmdfLibraryVersion = 1.15
+
+[Strings]
+SPSVCINST_ASSOCSERVICE= 0x00000002
+ManufacturerName="Educational Research"
+DiskName = "HVCIDriver Installation Disk"
+HVCIDriver.DeviceDesc = "HVCI-Compatible Research Driver"
+HVCIDriver.SVCDESC = "HVCI Research Driver Service"
